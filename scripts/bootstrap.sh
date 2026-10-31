@@ -236,7 +236,6 @@ fi
 
 # --- ручные шаги (GUI/секреты, не автоматизируются) ---
 echo "manual steps:
-  1. auth.json -> ~/.pi/agent/auth.json (секрет; руками с прежней машины/менеджера паролей)
   2. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
   3. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
   4. токены агента: ~/credentials/agents-credentials/git-credentials (git-credential-store)
