@@ -18,6 +18,29 @@ link_file() {
     echo "linked: $destination_path -> $source_path"
 }
 
+link_pi_file() {
+    local source_path="$1" destination_path="$2"
+    [ -e "$source_path" ] || { echo "link: source missing, skipping: $source_path"; return; }
+    mkdir -p "$(dirname "$destination_path")"
+
+    if [ -L "$destination_path" ]; then
+        if [ "$(readlink "$destination_path")" = "$source_path" ]; then
+            echo "link: already linked: $destination_path -> $source_path"
+            return
+        fi
+        echo "link: refusing to replace existing link: $destination_path" >&2
+        return 1
+    fi
+
+    if [ -e "$destination_path" ]; then
+        echo "link: refusing to replace existing file: $destination_path" >&2
+        return 1
+    fi
+
+    ln -s "$source_path" "$destination_path"
+    echo "linked: $destination_path -> $source_path"
+}
+
 secure() {
     chmod 700 "$REPOSITORY_ROOT"
 
@@ -26,7 +49,8 @@ secure() {
         "$REPOSITORY_ROOT/git" \
         "$REPOSITORY_ROOT/kube" \
         "$REPOSITORY_ROOT/nkp" \
-        "$REPOSITORY_ROOT/ssh"; do
+        "$REPOSITORY_ROOT/ssh" \
+        "$REPOSITORY_ROOT/pi"; do
         [ -d "$directory_path" ] || continue
         chmod 700 "$directory_path"
     done
@@ -36,7 +60,9 @@ secure() {
         "$REPOSITORY_ROOT/agents-credentials/git-credentials" \
         "$REPOSITORY_ROOT"/kube/* \
         "$REPOSITORY_ROOT"/nkp/*.txt \
-        "$REPOSITORY_ROOT"/ssh/*; do
+        "$REPOSITORY_ROOT"/ssh/* \
+        "$REPOSITORY_ROOT"/pi/auth.json \
+        "$REPOSITORY_ROOT"/pi/mcp.json; do
         [ -f "$file_path" ] || continue
         chmod 600 "$file_path"
     done
@@ -66,6 +92,15 @@ link)
         for source_path in "$REPOSITORY_ROOT"/kube/*; do
             [ -e "$source_path" ] || continue
             link_file "$source_path" "$HOME/.kube/$(basename "$source_path")"
+        done
+    fi
+
+    if [ -d "$REPOSITORY_ROOT/pi" ]; then
+        mkdir -p "$HOME/.pi/agent"
+        for file_name in auth.json mcp.json; do
+            source_path="$REPOSITORY_ROOT/pi/$file_name"
+            [ -e "$source_path" ] || continue
+            link_pi_file "$source_path" "$HOME/.pi/agent/$file_name"
         done
     fi
 
