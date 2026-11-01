@@ -76,108 +76,108 @@ edit_scrollback = ""     # мышкой
 rename_pane = ""
 split_horizontal = ""    # h занят под навигацию
 
-# --- воркспейсы: prefix+q..p = ws 1..10 -----------------------------------
+# --- воркспейсы: prefix+q..p = ws по пин-букве (state ws-keys) ------------
 [[keys.command]]
 key = "prefix+q"
 type = "shell"
-command = "herdr-tab ws 1"
+command = "herdr-tab ws q"
 
 [[keys.command]]
 key = "prefix+w"
 type = "shell"
-command = "herdr-tab ws 2"
+command = "herdr-tab ws w"
 
 [[keys.command]]
 key = "prefix+e"
 type = "shell"
-command = "herdr-tab ws 3"
+command = "herdr-tab ws e"
 
 [[keys.command]]
 key = "prefix+r"
 type = "shell"
-command = "herdr-tab ws 4"
+command = "herdr-tab ws r"
 
 [[keys.command]]
 key = "prefix+t"
 type = "shell"
-command = "herdr-tab ws 5"
+command = "herdr-tab ws t"
 
 [[keys.command]]
 key = "prefix+y"
 type = "shell"
-command = "herdr-tab ws 6"
+command = "herdr-tab ws y"
 
 [[keys.command]]
 key = "prefix+u"
 type = "shell"
-command = "herdr-tab ws 7"
+command = "herdr-tab ws u"
 
 [[keys.command]]
 key = "prefix+i"
 type = "shell"
-command = "herdr-tab ws 8"
+command = "herdr-tab ws i"
 
 [[keys.command]]
 key = "prefix+o"
 type = "shell"
-command = "herdr-tab ws 9"
+command = "herdr-tab ws o"
 
 [[keys.command]]
 key = "prefix+p"
 type = "shell"
-command = "herdr-tab ws 10"
+command = "herdr-tab ws p"
 
-# --- унести панель в ws 1..10: prefix+shift+q..p --------------------------
+# --- унести панель в ws по пин-букве: prefix+shift+q..p -------------------
 # уносит только текущую панель — переноса целого таба в API herdr нет
 [[keys.command]]
 key = "prefix+shift+q"
 type = "shell"
-command = "herdr-tab move 1"
+command = "herdr-tab move q"
 
 [[keys.command]]
 key = "prefix+shift+w"
 type = "shell"
-command = "herdr-tab move 2"
+command = "herdr-tab move w"
 
 [[keys.command]]
 key = "prefix+shift+e"
 type = "shell"
-command = "herdr-tab move 3"
+command = "herdr-tab move e"
 
 [[keys.command]]
 key = "prefix+shift+r"
 type = "shell"
-command = "herdr-tab move 4"
+command = "herdr-tab move r"
 
 [[keys.command]]
 key = "prefix+shift+t"
 type = "shell"
-command = "herdr-tab move 5"
+command = "herdr-tab move t"
 
 [[keys.command]]
 key = "prefix+shift+y"
 type = "shell"
-command = "herdr-tab move 6"
+command = "herdr-tab move y"
 
 [[keys.command]]
 key = "prefix+shift+u"
 type = "shell"
-command = "herdr-tab move 7"
+command = "herdr-tab move u"
 
 [[keys.command]]
 key = "prefix+shift+i"
 type = "shell"
-command = "herdr-tab move 8"
+command = "herdr-tab move i"
 
 [[keys.command]]
 key = "prefix+shift+o"
 type = "shell"
-command = "herdr-tab move 9"
+command = "herdr-tab move o"
 
 [[keys.command]]
 key = "prefix+shift+p"
 type = "shell"
-command = "herdr-tab move 10"
+command = "herdr-tab move p"
 
 [ui]
 hide_tab_bar_when_single_tab = true
