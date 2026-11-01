@@ -150,7 +150,6 @@ mkdir -p "$HOME/.config/herdr"
 link herdr.toml .config/herdr/config.toml
 # pi-интеграция: состояния агентов для сайдбара/уведомлений (ставит актуальную версию)
 herdr integration install pi >/dev/null 2>&1 || true
-# плагин ws-keys: клавиша ряда q..p в строках воркспейсов ($key в сайдбаре)
 
   # herdr-барьер для контейнерного pi (сайдбар herdr): TCP(loopback)->unix.
 # Доступ из VM1 — через gvproxy NAT (loopback мака).
