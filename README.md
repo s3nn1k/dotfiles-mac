@@ -63,8 +63,6 @@ listed here.
   `~/.config/zenwritten_dark`
 - [obsidian-config](https://github.com/s3nn1k/obsidian-config) -> `~/.config/obsidian`
   (shared Obsidian config, symlinked into the vaults as `.obsidian`)
-- [herdr-tools](https://github.com/s3nn1k/herdr-tools) ->
-  `~/projects/personal/herdr-tools` (herdr-tab helper + `ws-keys` plugin for herdr)
 - [nkp](https://github.com/s3nn1k/nkp) -> `~/projects/personal/nkp` (encrypted password
   vault tool built from source; bases live outside the public repos)
 - [pi-agent](https://github.com/s3nn1k/pi-agent) -> `~/.pi/agent` (agent runtime and its
