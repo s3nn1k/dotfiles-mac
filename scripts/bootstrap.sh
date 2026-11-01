@@ -12,7 +12,7 @@ link() {
   echo "linked:  $dst -> $src"
 }
 
-# Commands onto $LOCAL_BIN, names without .sh (herdr-tab comes from herdr-tools).
+# Commands onto $LOCAL_BIN, names without .sh.
 # git-crypt-textconv is a second name of git-crypt-repo (dispatch by $0).
 install_command() {
   local src="$1" name="$2"
@@ -127,14 +127,10 @@ clone_or_pull https://github.com/s3nn1k/pi-sandbox.git "$HOME/pi-sandbox"
 
 bash "$HOME/pi-sandbox/install.sh"
 
-# --- herdr-tools: herdr-tab + ws-keys plugin (cloned before it is linked below) ---
-HERDR_TOOLS="$HOME/projects/personal/herdr-tools"
-clone_or_pull https://github.com/s3nn1k/herdr-tools.git "$HERDR_TOOLS"
 
 # --- commands from scripts/ (before repos below: their make targets use them) ---
 mkdir -p "$LOCAL_BIN"
 install_command "$DIR/scripts/wt.sh" wt
-install_command "$HERDR_TOOLS/herdr-tab" herdr-tab
 install_command "$DIR/scripts/git-crypt-repo.sh" git-crypt-repo
 install_command "$DIR/scripts/git-crypt-repo.sh" git-crypt-textconv
 install_command "$DIR/scripts/credentials-setup.sh" credentials-setup
@@ -155,7 +151,6 @@ link herdr.toml .config/herdr/config.toml
 # pi-интеграция: состояния агентов для сайдбара/уведомлений (ставит актуальную версию)
 herdr integration install pi >/dev/null 2>&1 || true
 # плагин ws-keys: клавиша ряда q..p в строках воркспейсов ($key в сайдбаре)
-herdr plugin link "$HERDR_TOOLS" >/dev/null 2>&1 || true
 
   # herdr-барьер для контейнерного pi (сайдбар herdr): TCP(loopback)->unix.
 # Доступ из VM1 — через gvproxy NAT (loopback мака).
