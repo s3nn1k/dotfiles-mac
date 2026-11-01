@@ -22,9 +22,6 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   - `credentials-setup.sh` - link/secure `~/credentials`; pi `auth.json`/`mcp.json` ->
     `~/.pi/agent` (`~/.local/bin/credentials-setup`)
   - `wt.sh` - audio/video transcription via whisper.cpp (`wt`)
-  - `herdr-tab.sh` - workspace commands behind herdr keybindings (`herdr-tab`)
-- `herdr-plugins/` - herdr plugin packages (`ws-keys`: qwerty-row key per workspace in the
-  sidebar)
 
 ## New machine setup
 
@@ -48,8 +45,8 @@ git clone https://github.com/s3nn1k/dotfiles-mac.git ~/dotfiles-mac
 
 Can't be automated on macOS (require user clicks):
 
-- Grant **Accessibility** permission to AeroSpace: _System Settings -> Privacy &
-  Security -> Accessibility_
+- Grant **Accessibility** permission to AeroSpace: _System Settings -> Privacy & Security
+  -> Accessibility_
 - (optional) Set iTerm2 as default in `Mission Control` if desired
 - Happ: log in (TUN mode and local-network bypass - see `~/credentials/README.md`)
 - AirPlay receiver OFF: _System Settings -> General -> AirDrop & Handoff_ (opens loopback
@@ -66,6 +63,8 @@ listed here.
   `~/.config/zenwritten_dark`
 - [obsidian-config](https://github.com/s3nn1k/obsidian-config) -> `~/.config/obsidian`
   (shared Obsidian config, symlinked into the vaults as `.obsidian`)
+- [herdr-tools](https://github.com/s3nn1k/herdr-tools) ->
+  `~/projects/personal/herdr-tools` (herdr-tab helper + `ws-keys` plugin for herdr)
 - [nkp](https://github.com/s3nn1k/nkp) -> `~/projects/personal/nkp` (encrypted password
   vault tool built from source; bases live outside the public repos)
 - [pi-agent](https://github.com/s3nn1k/pi-agent) -> `~/.pi/agent` (agent runtime and its
