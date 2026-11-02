@@ -134,6 +134,7 @@ install_command "$DIR/scripts/wt.sh" wt
 install_command "$DIR/scripts/git-crypt-repo.sh" git-crypt-repo
 install_command "$DIR/scripts/git-crypt-repo.sh" git-crypt-textconv
 install_command "$DIR/scripts/credentials-setup.sh" credentials-setup
+install_command "$DIR/scripts/herdr-ws-focus.sh" herdr-ws-focus
 # shared pre-commit guard for all git-crypt repositories (core.hooksPath target)
 mkdir -p "$HOME/.local/share/git-crypt/hooks"
 ln -sfn "$LOCAL_BIN/git-crypt-repo" "$HOME/.local/share/git-crypt/hooks/pre-commit"
