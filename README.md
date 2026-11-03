@@ -6,28 +6,35 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
 
 - `zshrc`, `zprofile` - shell; private pieces (ssh wrapper for protected hosts) are
   sourced from `~/credentials`
-- `gitconfig` - public part: aliases + defaults; identity routing and credential helpers
-  live in `~/credentials/git/` (included, ignored when missing)
+- `gitconfig` - aliases + defaults; credential helpers inline (`gh` for github/gist,
+  `git-cred-read` for gitlab hosts) plus an include of
+  `~/.config/git/credentials.gitconfig` (private identities, linked by `setup-secrets`)
 - `aerospace.toml` - AeroSpace window manager
 - `herdr.toml` - Herdr terminal workspace manager (apply via `herdr server reload-config`)
 - `iterm2.json` - iTerm2 dynamic profile (auto-reloads on save; bootstrap also sets it as
   the default profile)
 - `Brewfile` - all Homebrew taps/formulae/casks; regenerate with
   `brew bundle dump --file Brewfile --force`
-- `scripts/` - executable commands (`.sh`, self-documenting):
+- `bin/` - commands installed to `~/.local/bin` by bootstrap:
+  - `wt` - transcribes audio/video via whisper.cpp -> text to stdout
+  - `git-crypt-repo.sh` - init/unlock/lock/status/key-show for git-crypt repositories;
+    also symlinked as `git-crypt-textconv` (diff driver) and the shared `pre-commit` guard
+  - `credentials-setup.sh` - `link` symlinks `~/credentials` secrets into `$HOME` (ssh,
+    kube, pi `auth.json`/`mcp.json`), `secure` tightens their permissions
+  - `herdr-ws.sh` - herdr workspace commands by sidebar position
+    (`focus`/`move-ws`/`move-tab`/`new-tab`)
+  - `git-cred-read.sh` - git credential helper serving `~/.git-credentials` entries
+- `scripts/`:
   - `bootstrap.sh` - full machine setup (below)
-  - `git-crypt-repo.sh` - init/unlock/lock/status/key-show for git-crypt repositories
-    (`~/.local/bin/git-crypt-repo`, also as `git-crypt-textconv` and the shared pre-commit
-    guard)
-  - `credentials-setup.sh` - link/secure `~/credentials`; pi `auth.json`/`mcp.json` ->
-    `~/.pi/agent` (`~/.local/bin/credentials-setup`)
-  - `wt.sh` - audio/video transcription via whisper.cpp (`wt`)
+  - `setup-secrets.sh` - `unlock` decrypts the cloned git-crypt repositories and wires
+    their runtime links; `link` does only the links
 
 ## New machine setup
 
 `scripts/bootstrap.sh` is self-sufficient: it waits for Xcode CLT, installs Homebrew,
-applies the Brewfile (apps included), runs `gh auth login` if needed, and prompts for the
-vault key when a git-crypt repository is still locked.
+applies the Brewfile (apps included), and runs `gh auth login` if needed. It stops short
+of secret activation: afterwards run `scripts/setup-secrets.sh unlock` (prompts for the
+git-crypt keys).
 
 ```bash
 # 1. Xcode Command Line Tools (git) - installer GUI, one click-through
