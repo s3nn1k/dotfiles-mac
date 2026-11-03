@@ -62,7 +62,9 @@ Can't be automated on macOS (require user clicks):
 ## Updating an existing machine
 
 Run bootstrap right after every pull: until it re-runs, renamed `bin/` commands leave
-broken `~/.local/bin` symlinks and commits fail on the missing identity include.
+broken `~/.local/bin` symlinks, commits fail on the missing identity include, and
+git-crypt repositories commit unprotected: the shared pre-commit hook dangles and git
+skips it silently.
 
 ```bash
 git pull
