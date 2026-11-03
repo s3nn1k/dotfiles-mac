@@ -38,22 +38,6 @@ clone_or_pull() {
   fi
 }
 
-# git-crypt repository: unlock with the key from $KEY_VAR (prompt when the
-# repository is locked and the variable is unset; no-op when already unlocked).
-unlock_repo() {
-  local repo="$1" key_var="$2" key_value
-  key_value="$(printenv "$key_var" 2>/dev/null || true)"
-  if [ ! -f "$repo/.git/git-crypt/keys/default" ] && [ -z "$key_value" ]; then
-    read -r -s -p "$key_var (base64, from password manager): " key_value || {
-      echo "unlock_repo: $key_var required (stdin is not a terminal)" >&2
-      return 1
-    }
-    echo
-  fi
-  make -C "$repo" init
-  VAULT_KEY="$key_value" make -C "$repo" unlock
-}
-
 # Register a directory in Obsidian's vault list so it shows up on launch.
 register_vault() {
   python3 - "$1" <<'PY'
@@ -195,25 +179,17 @@ if [ -x "$HOME/.config/nvim/init.sh" ]; then
   "$HOME/.config/nvim/init.sh"
 fi
 
-# --- machine credentials: git-crypt repository, secrets linked into $HOME ---
+# --- machine credentials: git-crypt repository ---
 CREDENTIALS="$HOME/credentials"
 clone_or_pull https://github.com/s3nn1k/credentials.git "$CREDENTIALS"
-unlock_repo "$CREDENTIALS" CREDENTIALS_KEY
-make -C "$CREDENTIALS" link
 
-# --- Obsidian: note vaults + shared config (.obsidian) ---
+# --- Obsidian: note vaults + shared config ---
 clone_or_pull https://github.com/s3nn1k/obsidian-config.git "$HOME/.config/obsidian"
 
 for vault_name in personal work; do
   VAULT="$HOME/vaults/$vault_name"
   mkdir -p "$(dirname "$VAULT")"
   clone_or_pull "https://github.com/s3nn1k/obsidian-$vault_name.git" "$VAULT"
-  case "$vault_name" in
-    personal) unlock_repo "$VAULT" PERSONAL_KEY ;;
-    work)     unlock_repo "$VAULT" WORK_KEY ;;
-  esac
-  ln -sfn "$HOME/.config/obsidian" "$VAULT/.obsidian"
-  echo "linked:  $VAULT/.obsidian -> ~/.config/obsidian"
   register_vault "$VAULT"
 done
 
@@ -221,8 +197,6 @@ done
 NKP="$HOME/projects/personal/nkp"
 clone_or_pull https://github.com/s3nn1k/nkp.git "$NKP"
 make -C "$NKP" install
-NKP_VAULT="$HOME/credentials/nkp" "$HOME/.local/bin/nkp" info main >/dev/null \
-  || echo "warn: nkp vault check failed (locked or no 'main' base?)"
 
 # --- whisper.cpp: large-v3-turbo model (~1.6 GB, skip if already there) ---
 # Binary comes from the Brewfile (brew whisper-cpp); it only reads WAV 16 kHz,
@@ -235,9 +209,10 @@ if [ ! -s "$WMODEL" ]; then
       https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
 fi
 
-# --- ручные шаги (GUI/секреты, не автоматизируются) ---
+# --- финальная подсказка и ручные шаги (GUI, не автоматизируются) ---
+echo "Дальше: открой nkp, достань ключи и запусти scripts/setup-secrets.sh unlock."
 echo "manual steps:
-  2. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
-  3. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
-  4. токены агента: ~/credentials/agents-credentials/git-credentials (git-credential-store)
-  5. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)"
+  1. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
+  2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
+  3. токены агента: ~/credentials/agents-credentials/git-credentials (git-credential-store)
+  4. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)"
