@@ -182,6 +182,7 @@ fi
 # --- machine credentials: git-crypt repository ---
 CREDENTIALS="$HOME/credentials"
 clone_or_pull https://github.com/s3nn1k/credentials.git "$CREDENTIALS"
+bash "$DIR/scripts/setup-secrets.sh" link
 
 # --- Obsidian: note vaults + shared config ---
 clone_or_pull https://github.com/s3nn1k/obsidian-config.git "$HOME/.config/obsidian"
