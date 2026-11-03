@@ -1,18 +1,24 @@
 [init]
-	defaultBranch = main
-
+    defaultBranch = main
 [user]
-	useConfigOnly = true
-
-# Identity routing (includeIf by remote) and per-host credential helpers live
-# in the private credentials repo; a missing file is silently ignored by git,
-# so this config stays usable without it.
+    useConfigOnly = true
+[credential "https://github.com"]
+    helper =
+    helper = !gh auth git-credential
 [include]
-	path = ~/credentials/git/gitconfig
-
+    path = ~/.config/git/credentials.gitconfig
+[credential "https://gist.github.com"]
+    helper =
+    helper = !gh auth git-credential
+[credential "https://gitlab.com"]
+    helper =
+    helper = !$HOME/.local/bin/git-cred-read
+[credential "https://gitlab.pinkzone.dev"]
+    helper =
+    helper = !$HOME/.local/bin/git-cred-read
 [alias]
-	pu = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
-	puf = !git push -u --force origin $(git rev-parse --abbrev-ref HEAD)
-	pul = !git pull origin $(git rev-parse --abbrev-ref HEAD)
-	co = checkout
-	br = branch
+    pu = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
+    puf = !git push -u --force origin $(git rev-parse --abbrev-ref HEAD)
+    pul = !git pull origin $(git rev-parse --abbrev-ref HEAD)
+    co = checkout
+    br = branch
