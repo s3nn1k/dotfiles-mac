@@ -59,6 +59,18 @@ Can't be automated on macOS (require user clicks):
 - AirPlay receiver OFF: _System Settings -> General -> AirDrop & Handoff_ (opens loopback
   ports 5000/7000 to the whole VM NAT range)
 
+## Updating an existing machine
+
+Run bootstrap right after every pull: until it re-runs, renamed `bin/` commands leave
+broken `~/.local/bin` symlinks and commits fail on the missing identity include.
+
+```bash
+git pull
+~/dotfiles-mac/scripts/bootstrap.sh   # runs setup-secrets.sh link once ~/credentials is cloned (no-op while locked)
+~/dotfiles-mac/scripts/setup-secrets.sh unlock   # no-op when already unlocked
+herdr server reload-config   # herdr.toml is picked up only here
+```
+
 ## Related public repos
 
 Private repositories (credentials, note vaults) are also handled by bootstrap but are not
