@@ -217,3 +217,4 @@ echo "manual steps:
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
   3. токены агента: ~/credentials/agents-credentials/git-credentials (git-credential-store)
   4. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)"
+echo "Если herdr.toml обновлялся: herdr server reload-config (сервер конфиг сам не перечитывает)."
