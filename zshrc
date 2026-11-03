@@ -1,3 +1,5 @@
+source "$HOME/.zprofile"
+
 # Prompt: oh-my-posh with custom theme
 eval "$(oh-my-posh init zsh --config "$HOME/.config/zenwritten_dark/zenwritten_dark.omp.json")"
 
