@@ -82,8 +82,10 @@ command_unlock() {
 }
 
 command_link() {
-    if [[ -d "$CREDENTIALS" ]]; then
-        if [[ -f "$CREDENTIALS/git/gitconfig" ]] && ! is_git_crypt_locked "$CREDENTIALS/git/gitconfig"; then
+    if [[ -f "$CREDENTIALS/git/gitconfig" ]]; then
+        if is_git_crypt_locked "$CREDENTIALS/git/gitconfig"; then
+            echo "setup-secrets: credentials locked - run 'unlock' first" >&2
+        else
             [[ -x "$CREDENTIALS_SETUP" ]] || fail "helper is missing or not executable: $CREDENTIALS_SETUP"
             run_make_target "$CREDENTIALS" link
             link_safely "$CREDENTIALS/git/gitconfig" "$RUNTIME_GITCONFIG"
