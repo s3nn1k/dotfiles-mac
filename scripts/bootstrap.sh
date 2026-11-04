@@ -107,9 +107,9 @@ fi
 # grafana MCP (uvx mcp-grafana): прогрев кэша uv — иначе первая pi-сессия ждёт ~16 MB скачивания
 uvx mcp-grafana --help >/dev/null 2>&1 || echo "warn: mcp-grafana prewarm failed"
 
-clone_or_pull https://github.com/s3nn1k/pi-sandbox.git "$HOME/pi-sandbox"
+clone_or_pull https://github.com/s3nn1k/pi-sandbox-macos.git "$HOME/pi-sandbox-macos"
 
-bash "$HOME/pi-sandbox/install.sh"
+bash "$HOME/pi-sandbox-macos/install.sh"
 
 
 # --- commands from bin/ (before repos below: their make targets use them) ---
@@ -142,10 +142,11 @@ herdr integration install pi >/dev/null 2>&1 || true
 # Доступ из VM1 — через gvproxy NAT (loopback мака).
 launchctl bootout "gui/$(id -u)/com.s3nn1k.herdr-bridge" >/dev/null 2>&1 || true
 launchctl bootout "gui/$(id -u)/com.pi-sandbox.herdr-bridge" >/dev/null 2>&1 || true
-sed "s|__HOME__|$HOME|" "$HOME/pi-sandbox/launchagents/com.pi-sandbox.herdr-bridge.plist" \
-  > "$HOME/Library/LaunchAgents/com.pi-sandbox.herdr-bridge.plist"
+launchctl bootout "gui/$(id -u)/com.pi-sandbox-macos.herdr-bridge" >/dev/null 2>&1 || true
+sed "s|__HOME__|$HOME|" "$HOME/pi-sandbox-macos/launchagents/com.pi-sandbox-macos.herdr-bridge.plist" \
+  > "$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist"
 launchctl bootstrap "gui/$(id -u)" \
-  "$HOME/Library/LaunchAgents/com.pi-sandbox.herdr-bridge.plist" && echo "herdr-bridge: agent loaded"
+  "$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist" && echo "herdr-bridge: agent loaded"
 
 # iTerm2 Dynamic Profile (auto-reloads, JSON format)
 ITERM_DP="$HOME/Library/Application Support/iTerm2/DynamicProfiles"

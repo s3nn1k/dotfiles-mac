@@ -88,5 +88,5 @@ listed here.
   vault tool built from source; bases live outside the public repos)
 - [pi-agent](https://github.com/s3nn1k/pi-agent) -> `~/.pi/agent` (agent runtime and its
   config; cloned when missing)
-- [pi-sandbox](https://github.com/s3nn1k/pi-sandbox) -> `~/pi-sandbox` (its `install.sh`
-  runs during bootstrap)
+- [pi-sandbox-macos](https://github.com/s3nn1k/pi-sandbox-macos) -> `~/pi-sandbox-macos`
+  (its `install.sh` runs during bootstrap)

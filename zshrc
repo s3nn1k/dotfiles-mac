@@ -29,7 +29,7 @@ export NKP_VAULT="$HOME/credentials/nkp"
 # путей): cwd запуска обязан быть
 # внутри смонтированного корня — иначе контейнеру будет виден весь каталог.
 pi() {
-  "$HOME/pi-sandbox/bin/pi-run" "$@"
+  "$HOME/pi-sandbox-macos/bin/pi-run" "$@"
 }
 
 # ssh wrapper for knock-protected hosts: private overlay from ~/credentials
