@@ -131,6 +131,10 @@ link aerospace.toml  .aerospace.toml
 link zshrc           .zshrc
 link zprofile        .zprofile
 
+# oh-my-posh prompt theme (eval'd by zshrc)
+mkdir -p "$HOME/.config/omp"
+link omp/prompt.omp.json .config/omp/prompt.omp.json
+
 # herdr: terminal workspace manager (config file only; runtime state —
 # сокеты/логи — остаётся в обычном ~/.config/herdr)
 mkdir -p "$HOME/.config/herdr"
@@ -171,8 +175,9 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add \
   61 '{enabled = 1; value = {parameters = (32, 49, 262144); type = standard;};}'
 
 # --- external repos ---
-clone_or_pull https://github.com/s3nn1k/nvim.git            "$HOME/.config/nvim"
-clone_or_pull https://github.com/s3nn1k/zenwritten_dark.git "$HOME/.config/zenwritten_dark"
+clone_or_pull https://github.com/s3nn1k/nvim.git "$HOME/.config/nvim"
+# zenwritten_dark repo is retired; the omp theme now lives here (omp/prompt.omp.json)
+rm -rf "$HOME/.config/zenwritten_dark"
 
 # Run nvim's own bootstrap if provided
 if [ -x "$HOME/.config/nvim/init.sh" ]; then

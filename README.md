@@ -12,6 +12,7 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
 - `aerospace.toml` - AeroSpace window manager
 - `herdr/config.toml` - Herdr terminal workspace manager (bootstrap links it to
   `~/.config/herdr/config.toml`; apply via `herdr server reload-config`)
+- `omp/prompt.omp.json` - oh-my-posh prompt theme (linked to `~/.config/omp/`)
 - `iterm2.json` - iTerm2 dynamic profile (auto-reloads on save; bootstrap also sets it as
   the default profile)
 - `Brewfile` - all Homebrew taps/formulae/casks; regenerate with
@@ -81,8 +82,6 @@ listed here.
 
 - [nvim](https://github.com/s3nn1k/nvim) -> `~/.config/nvim` (its own `init.sh` runs
   automatically)
-- [zenwritten_dark](https://github.com/s3nn1k/zenwritten_dark) ->
-  `~/.config/zenwritten_dark`
 - [obsidian-config](https://github.com/s3nn1k/obsidian-config) -> `~/.config/obsidian`
   (shared Obsidian config, symlinked into the vaults as `.obsidian`)
 - [nkp](https://github.com/s3nn1k/nkp) -> `~/projects/personal/nkp` (encrypted password

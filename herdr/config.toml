@@ -2,33 +2,27 @@
 # reload: herdr server reload-config; дефолты: herdr --default-config
 onboarding = false
 
-# --- тема: zenwritten_dark ---------------------------------------------------
-# Оттенки — только палитра zenwritten_dark.omp.json: #608b4e (❯), #e5c07b,
-# #d4d4d4, #f48771. Фон и поверхности — bg foot #15191f и производные:
-# в omp-теме фона нет. Смена темы: сменить name на встроенную и убрать custom.
+# --- тема: terminal base + поверхности pi gruvbox-dark-soft -------------------
+# база "terminal" наследует текст и фон из iTerm2; акценты заданы явно
+# (из ANSI терминал-база их не подхватывает), поверхности и selection тоже
 [theme]
-name = "terminal" # база для токенов без override: follows ANSI-слотам терминала
+name = "terminal"
 
 [theme.custom]
-text = "#d4d4d4"
-subtext0 = "#d4d4d4"
-surface_dim = "#12161b"
-surface0 = "#1b2027"
-surface1 = "#232931"
-overlay0 = "#4a5261"
-overlay1 = "#5b6472"
-sidebar_bg = "#15191f"
-active_row_bg = "#232931"
-selection_bg = "#2a3140"
-panel_bg = "#15191f" # таббар и панели: ровно bg foot, без ступеньки
-accent = "#608b4e"
-red = "#f48771"
-green = "#608b4e"
-yellow = "#e5c07b"
-blue = "#608b4e"
-teal = "#e5c07b"
-peach = "#f48771"
-mauve = "#e5c07b"
+accent = "#83a598"
+red = "#fb4934"
+green = "#b8bb26"
+yellow = "#fabd2f"
+blue = "#83a598"
+teal = "#8ec07c"
+peach = "#fe8019"
+mauve = "#d3869b"
+surface0 = "#3c3836"
+surface1 = "#504945"
+overlay0 = "#504945"
+overlay1 = "#7c6f64"
+active_row_bg = "#3c3836"
+selection_bg = "#665c54"
 
 # --- клавиши -------------------------------------------------------------------
 [keys]
