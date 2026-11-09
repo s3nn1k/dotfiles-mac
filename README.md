@@ -25,6 +25,8 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
     kube, pi `auth.json`/`mcp.json`), `secure` tightens their permissions
   - `herdr-ws.sh` - herdr workspace commands by sidebar position
     (`focus`/`move-ws`/`move-tab`/`new-tab`)
+  - `herdr-agent-rename` - herdr popup: rename the agent of the current pane
+    (bound to `prefix+m`)
   - `git-cred-read.sh` - git credential helper serving `~/.git-credentials` entries
 - `scripts/`:
   - `bootstrap.sh` - full machine setup (below)

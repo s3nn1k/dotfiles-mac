@@ -119,6 +119,7 @@ install_command "$DIR/bin/git-crypt-repo.sh" git-crypt-repo
 install_command "$DIR/bin/git-crypt-repo.sh" git-crypt-textconv
 install_command "$DIR/bin/credentials-setup.sh" credentials-setup
 install_command "$DIR/bin/herdr-ws.sh" herdr-ws
+install_command "$DIR/bin/herdr-agent-rename" herdr-agent-rename
 install_command "$DIR/bin/git-cred-read.sh" git-cred-read
 rm -f "$LOCAL_BIN/herdr-ws-focus"
 # shared pre-commit guard for all git-crypt repositories (core.hooksPath target)
