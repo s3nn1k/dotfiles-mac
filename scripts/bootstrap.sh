@@ -134,7 +134,7 @@ link zprofile        .zprofile
 # herdr: terminal workspace manager (config file only; runtime state —
 # сокеты/логи — остаётся в обычном ~/.config/herdr)
 mkdir -p "$HOME/.config/herdr"
-link herdr.toml .config/herdr/config.toml
+link herdr/config.toml .config/herdr/config.toml
 # pi-интеграция: состояния агентов для сайдбара/уведомлений (ставит актуальную версию)
 herdr integration install pi >/dev/null 2>&1 || true
 
@@ -218,4 +218,4 @@ echo "manual steps:
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
   3. токены агента: ~/credentials/agents-credentials/git-credentials (git-credential-store)
   4. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)"
-echo "Если herdr.toml обновлялся: herdr server reload-config (сервер конфиг сам не перечитывает)."
+echo "Если herdr/config.toml обновлялся: herdr server reload-config (сервер конфиг сам не перечитывает)."

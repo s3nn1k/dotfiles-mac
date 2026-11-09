@@ -10,7 +10,8 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   `git-cred-read` for gitlab hosts) plus an include of
   `~/.config/git/credentials.gitconfig` (private identities, linked by `setup-secrets`)
 - `aerospace.toml` - AeroSpace window manager
-- `herdr.toml` - Herdr terminal workspace manager (apply via `herdr server reload-config`)
+- `herdr/config.toml` - Herdr terminal workspace manager (bootstrap links it to
+  `~/.config/herdr/config.toml`; apply via `herdr server reload-config`)
 - `iterm2.json` - iTerm2 dynamic profile (auto-reloads on save; bootstrap also sets it as
   the default profile)
 - `Brewfile` - all Homebrew taps/formulae/casks; regenerate with
@@ -70,7 +71,7 @@ skips it silently.
 git pull
 ~/dotfiles-mac/scripts/bootstrap.sh   # runs setup-secrets.sh link once ~/credentials is cloned (no-op while locked)
 ~/dotfiles-mac/scripts/setup-secrets.sh unlock   # no-op when already unlocked
-herdr server reload-config   # herdr.toml is picked up only here
+herdr server reload-config   # herdr/config.toml is picked up only here
 ```
 
 ## Related public repos

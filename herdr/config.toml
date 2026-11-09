@@ -1,4 +1,4 @@
-# herdr — config.toml (симлинк из ~/dotfiles-mac/herdr.toml)
+# herdr — config.toml (симлинк из ~/dotfiles-mac/herdr/config.toml)
 # reload: herdr server reload-config; дефолты: herdr --default-config
 onboarding = false
 
