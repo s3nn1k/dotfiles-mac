@@ -6,9 +6,9 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
 
 - `zshrc`, `zprofile` - shell; private pieces (ssh wrapper for protected hosts) are
   sourced from `~/credentials`
-- `gitconfig` - aliases + defaults; credential helpers inline (`gh` for github/gist,
-  `git-cred-read` for gitlab hosts) plus an include of
-  `~/.config/git/credentials.gitconfig` (private identities, linked by `setup-secrets`)
+- `gitconfig` - aliases + defaults; `gh` credential helpers for github/gist inline,
+  private hosts and identities live in the included
+  `~/.config/git/credentials.gitconfig` (linked by `setup-secrets`)
 - `aerospace.toml` - AeroSpace window manager
 - `herdr/config.toml` - Herdr terminal workspace manager (bootstrap links it to
   `~/.config/herdr/config.toml`; apply via `herdr server reload-config`)
