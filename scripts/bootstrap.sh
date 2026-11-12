@@ -222,6 +222,6 @@ echo "Дальше: открой nkp, достань ключи и запуст�
 echo "manual steps:
   1. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
-  3. токены агента: ~/credentials/agents-credentials/git-credentials (git-credential-store)
+  3. токены агента: ~/credentials/agents-credentials/ (git-credentials + kubeconfig/pgpass/pg_service.conf)
   4. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)"
 echo "Если herdr/config.toml обновлялся: herdr server reload-config (сервер конфиг сам не перечитывает)."
