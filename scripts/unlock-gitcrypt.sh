@@ -20,7 +20,7 @@ verify_decrypted() {
     if is_git_crypt_locked "$CREDENTIALS/$CANARY_PATH"; then
         fail "$CREDENTIALS is still encrypted after unlock: $CREDENTIALS/$CANARY_PATH
 probable cause: rotated git-crypt key - the installed key is stale, so 'make unlock' was a no-op
-treatment: cd $CREDENTIALS && make lock && make unlock (paste the new base64 key, or run VAULT_KEY=<key> make unlock)"
+treatment: cd $CREDENTIALS && make lock && make unlock (paste the new base64 key)"
     fi
 }
 
@@ -43,6 +43,7 @@ main() {
         rm -f "$CREDENTIALS/.git/git-crypt/keys/default"
         fail 'unlock failed: key not installed, repo still locked - re-run with the correct key'
     }
+    unset key VAULT_KEY 2>/dev/null || true
     verify_decrypted
 
     make -C "$CREDENTIALS" link
