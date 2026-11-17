@@ -9,7 +9,7 @@ if [ -x /opt/homebrew/bin/brew ]; then
   export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 fi
 
-# ~/.local/bin on PATH (pipx tools, nkp, etc. live here)
+# ~/.local/bin on PATH (pipx tools, etc. live here)
 export PATH="$HOME/.local/bin:$PATH"
 
 # Go binaries (guarded: go may be absent on a fresh machine until brew bundle runs)

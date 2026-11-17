@@ -196,10 +196,8 @@ for vault_name in personal work; do
   register_vault "$VAULT"
 done
 
-# --- NeoKeePass (nkp): encrypted password vault tool ---
-NKP="$HOME/projects/personal/nkp"
-clone_or_pull https://github.com/s3nn1k/nkp.git "$NKP"
-make -C "$NKP" install
+mkdir -p "$HOME/Library/Application Support/keepassxc"
+link keepassxc/keepassxc.ini "Library/Application Support/keepassxc/keepassxc.ini"
 
 # --- whisper.cpp: large-v3-turbo model (~1.6 GB, skip if already there) ---
 # Binary comes from the Brewfile (brew whisper-cpp); it only reads WAV 16 kHz,
@@ -213,7 +211,6 @@ if [ ! -s "$WMODEL" ]; then
 fi
 
 # --- финальная подсказка и ручные шаги (GUI, не автоматизируются) ---
-echo "Секреты: открой nkp, достань ключи, затем scripts/unlock-gitcrypt.sh (ключ credentials) - раскладка секретов и права применятся сами."
 echo "manual steps:
   1. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)

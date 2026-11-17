@@ -14,8 +14,6 @@ source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
-export NKP_VAULT="$HOME/credentials/nkp"
-
 pi() {
   "$HOME/pi-sandbox-macos/bin/pi-run" "$@"
 }

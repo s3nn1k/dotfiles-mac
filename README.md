@@ -84,8 +84,6 @@ listed here.
   automatically)
 - [obsidian-config](https://github.com/s3nn1k/obsidian-config) -> `~/.config/obsidian`
   (shared Obsidian config, symlinked into the vaults as `.obsidian`)
-- [nkp](https://github.com/s3nn1k/nkp) -> `~/projects/personal/nkp` (encrypted password
-  vault tool built from source; bases live outside the public repos)
 - [pi-agent](https://github.com/s3nn1k/pi-agent) -> `~/.pi/agent` (agent runtime and its
   config; cloned when missing)
 - [pi-sandbox-macos](https://github.com/s3nn1k/pi-sandbox-macos) -> `~/pi-sandbox-macos`

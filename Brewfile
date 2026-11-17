@@ -49,6 +49,7 @@ cask "happ"   # proxy client (github.com/Happ-proxy/happ-desktop)
 cask "obsidian"
 cask "lens"   # Mirantis Lens (openlens нет части фич)
 cask "telegram"
+cask "keepassxc"
 brew "yt-dlp"
 brew "whisper-cpp"
 brew "ffmpeg"
