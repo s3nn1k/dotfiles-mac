@@ -111,12 +111,12 @@ clone_or_pull https://github.com/s3nn1k/pi-sandbox-macos.git "$HOME/pi-sandbox-m
 bash "$HOME/pi-sandbox-macos/install.sh"
 
 
-# --- commands from bin/ (before repos below: their make targets use them) ---
+# --- commands from herdr/bin (before repos below: their make targets use them) ---
 mkdir -p "$LOCAL_BIN"
-install_command "$DIR/bin/wt" wt
 install_command "$DIR/herdr/bin/herdr-ws.sh" herdr-ws
 install_command "$DIR/herdr/bin/herdr-agent-rename.sh" herdr-agent-rename
 rm -f "$LOCAL_BIN/herdr-ws-focus"
+rm -f "$LOCAL_BIN/wt"
 rm -f "$LOCAL_BIN/git-crypt-repo" "$LOCAL_BIN/git-crypt-textconv" \
   "$LOCAL_BIN/credentials-setup" "$LOCAL_BIN/git-cred-read"
 rm -rf "$HOME/.local/share/git-crypt"
@@ -196,17 +196,6 @@ done
 
 mkdir -p "$HOME/Library/Application Support/keepassxc"
 link keepassxc/keepassxc.ini "Library/Application Support/keepassxc/keepassxc.ini"
-
-# --- whisper.cpp: large-v3-turbo model (~1.6 GB, skip if already there) ---
-# Binary comes from the Brewfile (brew whisper-cpp); it only reads WAV 16 kHz,
-# the `wt` zsh function converts everything else via ffmpeg.
-WMODEL="$HOME/.local/share/whisper/models/ggml-large-v3-turbo.bin"
-mkdir -p "$(dirname "$WMODEL")"
-if [ ! -s "$WMODEL" ]; then
-    echo "downloading: whisper large-v3-turbo (~1.6 GB)"
-    curl -L -C - -o "$WMODEL" \
-      https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
-fi
 
 # --- финальная подсказка и ручные шаги (GUI, не автоматизируются) ---
 echo "manual steps:

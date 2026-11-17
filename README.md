@@ -22,8 +22,6 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   the default profile)
 - `Brewfile` - all Homebrew taps/formulae/casks; regenerate with
   `brew bundle dump --file Brewfile --force`
-- `bin/` - commands installed to `~/.local/bin` by bootstrap:
-  - `wt` - transcribes audio/video via whisper.cpp -> text to stdout
 - `scripts/`:
   - `bootstrap.sh` - full machine setup (below)
   - `unlock-gitcrypt.sh` - unlocks git-crypt in `~/credentials` (machinery lives in
