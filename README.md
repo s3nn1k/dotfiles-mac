@@ -8,7 +8,7 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   sourced from `~/credentials`
 - `gitconfig` - aliases + defaults; `gh` credential helpers for github/gist inline,
   private hosts and identities live in the included
-  `~/.config/git/credentials.gitconfig` (linked by `setup-secrets`)
+  `~/.config/git/credentials.gitconfig` (linked by `scripts/unlock-gitcrypt.sh`)
 - `aerospace.toml` - AeroSpace window manager
 - `herdr/config.toml` - Herdr terminal workspace manager (bootstrap links it to
   `~/.config/herdr/config.toml`; apply via `herdr server reload-config`)
@@ -19,26 +19,22 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   `brew bundle dump --file Brewfile --force`
 - `bin/` - commands installed to `~/.local/bin` by bootstrap:
   - `wt` - transcribes audio/video via whisper.cpp -> text to stdout
-  - `git-crypt-repo.sh` - init/unlock/lock/status/key-show for git-crypt repositories;
-    also symlinked as `git-crypt-textconv` (diff driver) and the shared `pre-commit` guard
-  - `credentials-setup.sh` - `link` symlinks `~/credentials` secrets into `$HOME` (ssh,
-    kube, pi `auth.json`/`mcp.json`), `secure` tightens their permissions
   - `herdr-ws.sh` - herdr workspace commands by sidebar position
     (`focus`/`move-ws`/`move-tab`/`new-tab`)
   - `herdr-agent-rename` - herdr popup: rename the agent of the current pane
     (bound to `prefix+m`)
-  - `git-cred-read.sh` - git credential helper serving `~/.git-credentials` entries
 - `scripts/`:
   - `bootstrap.sh` - full machine setup (below)
-  - `setup-secrets.sh` - `unlock` decrypts the cloned git-crypt repositories and wires
-    their runtime links; `link` does only the links
+  - `unlock-gitcrypt.sh` - unlocks git-crypt in `~/credentials` (machinery lives in
+    `~/credentials/scripts/git-crypt-repo.sh`), canary check, lays out secrets, tightens
+    permissions
 
 ## New machine setup
 
 `scripts/bootstrap.sh` is self-sufficient: it waits for Xcode CLT, installs Homebrew,
 applies the Brewfile (apps included), and runs `gh auth login` if needed. It stops short
-of secret activation: afterwards run `scripts/setup-secrets.sh unlock` (prompts for the
-git-crypt keys).
+of secret activation: afterwards run `scripts/unlock-gitcrypt.sh` (prompts for the
+credentials key).
 
 ```bash
 # 1. Xcode Command Line Tools (git) - installer GUI, one click-through
@@ -65,15 +61,15 @@ Can't be automated on macOS (require user clicks):
 
 ## Updating an existing machine
 
-Run bootstrap right after every pull: until it re-runs, renamed `bin/` commands leave
-broken `~/.local/bin` symlinks, commits fail on the missing identity include, and
-git-crypt repositories commit unprotected: the shared pre-commit hook dangles and git
-skips it silently.
+Run bootstrap right after every pull: until it re-runs, renamed commands leave broken
+`~/.local/bin` symlinks and commits fail on the missing identity include. On a fresh
+`~/credentials` clone, run `scripts/unlock-gitcrypt.sh` before committing there: it
+installs the repo-local pre-commit guard that blocks committing still-encrypted files.
 
 ```bash
 git pull
-~/dotfiles-mac/scripts/bootstrap.sh   # runs setup-secrets.sh link once ~/credentials is cloned (no-op while locked)
-~/dotfiles-mac/scripts/setup-secrets.sh unlock   # no-op when already unlocked
+~/dotfiles-mac/scripts/bootstrap.sh
+~/dotfiles-mac/scripts/unlock-gitcrypt.sh
 herdr server reload-config   # herdr/config.toml is picked up only here
 ```
 

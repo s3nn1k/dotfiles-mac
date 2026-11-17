@@ -13,7 +13,6 @@ link() {
 }
 
 # Commands onto $LOCAL_BIN, names without .sh.
-# git-crypt-textconv is a second name of git-crypt-repo (dispatch by $0).
 install_command() {
   local src="$1" name="$2"
   ln -sfn "$src" "$LOCAL_BIN/$name"
@@ -115,16 +114,9 @@ bash "$HOME/pi-sandbox-macos/install.sh"
 # --- commands from bin/ (before repos below: their make targets use them) ---
 mkdir -p "$LOCAL_BIN"
 install_command "$DIR/bin/wt" wt
-install_command "$DIR/bin/git-crypt-repo.sh" git-crypt-repo
-install_command "$DIR/bin/git-crypt-repo.sh" git-crypt-textconv
-install_command "$DIR/bin/credentials-setup.sh" credentials-setup
 install_command "$DIR/bin/herdr-ws.sh" herdr-ws
 install_command "$DIR/bin/herdr-agent-rename" herdr-agent-rename
-install_command "$DIR/bin/git-cred-read.sh" git-cred-read
 rm -f "$LOCAL_BIN/herdr-ws-focus"
-# shared pre-commit guard for all git-crypt repositories (core.hooksPath target)
-mkdir -p "$HOME/.local/share/git-crypt/hooks"
-ln -sfn "$LOCAL_BIN/git-crypt-repo" "$HOME/.local/share/git-crypt/hooks/pre-commit"
 
 # --- file symlinks ---
 link gitconfig       .gitconfig
@@ -189,7 +181,6 @@ fi
 # --- machine credentials: git-crypt repository ---
 CREDENTIALS="$HOME/credentials"
 clone_or_pull https://github.com/s3nn1k/credentials.git "$CREDENTIALS"
-bash "$DIR/scripts/setup-secrets.sh" link
 
 # --- Obsidian: note vaults + shared config ---
 clone_or_pull https://github.com/s3nn1k/obsidian-config.git "$HOME/.config/obsidian"
@@ -218,7 +209,7 @@ if [ ! -s "$WMODEL" ]; then
 fi
 
 # --- финальная подсказка и ручные шаги (GUI, не автоматизируются) ---
-echo "Дальше: открой nkp, достань ключи и запусти scripts/setup-secrets.sh unlock."
+echo "Секреты: открой nkp, достань ключи, затем scripts/unlock-gitcrypt.sh (ключ credentials) - раскладка секретов и права применятся сами."
 echo "manual steps:
   1. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
