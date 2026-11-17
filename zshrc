@@ -56,5 +56,4 @@ if [[ "$(uname -s)" == Darwin && -n "$SSH_AUTH_SOCK" ]] && ! ssh-add -l &>/dev/n
   ssh-add -A 2>/dev/null
 fi
 
-# Pi
 export PATH="$HOME/.pi/agent/bin:$PATH"
