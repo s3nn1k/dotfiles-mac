@@ -1,206 +1,58 @@
 #!/usr/bin/env bash
-# Bootstrap $HOME: symlinks, external repos, brew packages.
-# Safe to re-run: symlinks are overwritten, repos are pulled, brew bundle is idempotent.
 set -euo pipefail
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/../bootstrap/lib.sh"
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-LOCAL_BIN="$HOME/.local/bin"
+STEP_ORDER=(brew repos herdr git desktop keyboard zsh nvim credentials obsidian keepassxc)
 
-link() {
-  local src="$DIR/$1" dst="$HOME/$2"
-  ln -sfn "$src" "$dst"
-  echo "linked:  $dst -> $src"
-}
-
-# Commands onto $LOCAL_BIN, names without .sh.
-install_command() {
-  local src="$1" name="$2"
-  ln -sfn "$src" "$LOCAL_BIN/$name"
-  echo "command: $LOCAL_BIN/$name -> $src"
-}
-
-clone_or_pull() {
-  local repo="$1" dest="$2" tmp
-  if [ -d "$dest/.git" ]; then
-    git -C "$dest" pull --ff-only
-    echo "updated: $dest"
-  elif [ -e "$dest" ] && [ -n "$(ls -A "$dest" 2>/dev/null)" ]; then
-    tmp="$(mktemp -d)"
-    git clone "$repo" "$tmp/src"
-    cp -a "$tmp/src/." "$dest/"
-    rm -rf "$tmp"
-    echo "merged-clone: $dest"
-  else
-    mkdir -p "$(dirname "$dest")"
-    git clone "$repo" "$dest"
-    echo "cloned:  $dest"
-  fi
-}
-
-# Register a directory in Obsidian's vault list so it shows up on launch.
-register_vault() {
-  python3 - "$1" <<'PY'
-import json, sys, time, uuid, pathlib
-vault = sys.argv[1]
-p = pathlib.Path.home() / "Library/Application Support/obsidian/obsidian.json"
-p.parent.mkdir(parents=True, exist_ok=True)
-data = json.loads(p.read_text()) if p.exists() else {"vaults": {}}
-if not any(v.get("path") == vault for v in data.get("vaults", {}).values()):
-    data.setdefault("vaults", {})[uuid.uuid4().hex[:16]] = {
-        "path": vault, "ts": int(time.time() * 1000), "open": True
-    }
-    p.write_text(json.dumps(data, indent=2))
-    print(f"registered: {vault}")
-else:
-    print(f"already registered: {vault}")
-PY
-}
-
-# --- Xcode Command Line Tools (git; hard dependency of brew) ---
-# Opens a GUI installer — user clicks through, script waits for it to finish.
-if ! xcode-select -p >/dev/null 2>&1; then
-    echo "CLT: missing — installer opened, click through (waiting)…"
-    xcode-select --install >/dev/null 2>&1 || true
-    WAITED=0
-    until xcode-select -p >/dev/null 2>&1; do
-        sleep 5
-        WAITED=$((WAITED + 5))
-        if [ "$WAITED" -ge 900 ]; then
-            echo "CLT: not installed after 15 min — rerun bootstrap.sh" >&2
-            exit 1
-        fi
-    done
-fi
-
-# --- Homebrew ---
-if ! command -v brew >/dev/null 2>&1; then
-    echo "brew: installing…"
-    NONINTERACTIVE=1 /bin/bash -c \
-      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    # shellenv makes brew visible to this same run (fresh install, new shell session)
-    for BREW_BIN in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-        [ -x "$BREW_BIN" ] && eval "$($BREW_BIN shellenv)" && break
-    done
-fi
-
-echo "applying Brewfile…"
-# Homebrew refuses formulae/casks from non-official taps until trusted;
-# trust state is per-machine (~/.homebrew/trust.json) — redo on each new machine
-for tap in hashicorp/tap int128/kubelogin jandedobbeleer/oh-my-posh nikitabobko/tap; do
-    brew trust "$tap" >/dev/null 2>&1 || true   # old brew without `trust` — skip
-done
-brew bundle --file "$DIR/Brewfile"
-# some formula postinstalls leave /opt/homebrew/share group-writable, which makes
-# zsh compinit flag it as insecure and silently drop ALL completions
-chmod g-w "$(brew --prefix)/share" 2>/dev/null || true
-
-# --- gh auth: required before cloning private repos below ---
-if ! gh auth status >/dev/null 2>&1; then
-    echo "gh: not authenticated — browser login (protocol: HTTPS)"
-    gh auth login --git-protocol https
-fi
-
-if [ ! -d "$HOME/.pi/agent/.git" ]; then
-    git clone https://github.com/s3nn1k/pi-agent.git "$HOME/.pi/agent"
-fi
-# grafana MCP (uvx mcp-grafana): прогрев кэша uv — иначе первая pi-сессия ждёт ~16 MB скачивания
-uvx mcp-grafana --help >/dev/null 2>&1 || echo "warn: mcp-grafana prewarm failed"
-
-clone_or_pull https://github.com/s3nn1k/pi-sandbox-macos.git "$HOME/pi-sandbox-macos"
-
-bash "$HOME/pi-sandbox-macos/install.sh"
-
-
-# --- commands from herdr/bin (before repos below: their make targets use them) ---
-mkdir -p "$LOCAL_BIN"
-install_command "$DIR/herdr/bin/herdr-ws.sh" herdr-ws
-install_command "$DIR/herdr/bin/herdr-agent-rename.sh" herdr-agent-rename
-rm -f "$LOCAL_BIN/herdr-ws-focus"
-rm -f "$LOCAL_BIN/wt"
-rm -f "$LOCAL_BIN/git-crypt-repo" "$LOCAL_BIN/git-crypt-textconv" \
-  "$LOCAL_BIN/credentials-setup" "$LOCAL_BIN/git-cred-read"
-rm -rf "$HOME/.local/share/git-crypt"
-
-# --- file symlinks ---
-link gitconfig       .gitconfig
-link aerospace.toml  .aerospace.toml
-link zshrc           .zshrc
-link zprofile        .zprofile
-
-# oh-my-posh prompt theme (eval'd by zshrc)
-mkdir -p "$HOME/.config/omp"
-link omp/prompt.omp.json .config/omp/prompt.omp.json
-
-# herdr: terminal workspace manager (config file only; runtime state —
-# сокеты/логи — остаётся в обычном ~/.config/herdr)
-mkdir -p "$HOME/.config/herdr"
-link herdr/config.toml .config/herdr/config.toml
-# pi-интеграция: состояния агентов для сайдбара/уведомлений (ставит актуальную версию)
-herdr integration install pi >/dev/null 2>&1 || true
-
-  # herdr-барьер для контейнерного pi (сайдбар herdr): TCP(loopback)->unix.
-# Доступ из VM1 — через gvproxy NAT (loopback мака).
-launchctl bootout "gui/$(id -u)/com.s3nn1k.herdr-bridge" >/dev/null 2>&1 || true
-launchctl bootout "gui/$(id -u)/com.pi-sandbox.herdr-bridge" >/dev/null 2>&1 || true
-launchctl bootout "gui/$(id -u)/com.pi-sandbox-macos.herdr-bridge" >/dev/null 2>&1 || true
-sed "s|__HOME__|$HOME|" "$HOME/pi-sandbox-macos/launchagents/com.pi-sandbox-macos.herdr-bridge.plist" \
-  > "$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist"
-launchctl bootstrap "gui/$(id -u)" \
-  "$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist" && echo "herdr-bridge: agent loaded"
-
-# iTerm2 Dynamic Profile (auto-reloads, JSON format)
-ITERM_DP="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
-mkdir -p "$ITERM_DP"
-ln -sfn "$DIR/iterm2.json" "$ITERM_DP/dotfiles.json"
-echo "linked:  $ITERM_DP/dotfiles.json"
-# Set "Dotfiles" as the default profile (GUID must match the JSON)
-defaults write com.googlecode.iterm2 "Default Bookmark Guid" \
-  -string "8F407364-0CD1-4EE5-8861-6C3FACFCC48E"
-echo "iterm2:  default profile set to 'Dotfiles'"
-
-# --- macOS: раскладки и переключение ввода ---
-# ABC + Русская-ПК (RussianWin); переключение раскладки — Ctrl+Space
-# (id=61 next source), дубль на Ctrl+Opt+Space (id=60) выключен —
-# ctrl+b остаётся свободным под herdr-префикс.
-# Применяется после logout/reboot; команды идемпотентны.
-defaults write com.apple.HIToolbox AppleEnabledInputSources -array \
-  '{InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 252; "KeyboardLayout Name" = ABC;}' \
-  '{InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 19458; "KeyboardLayout Name" = RussianWin;}'
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add \
-  60 '{enabled = 0; value = {parameters = (32, 49, 786432); type = standard;};}' \
-  61 '{enabled = 1; value = {parameters = (32, 49, 262144); type = standard;};}'
-
-# --- external repos ---
-clone_or_pull https://github.com/s3nn1k/nvim.git "$HOME/.config/nvim"
-# zenwritten_dark repo is retired; the omp theme now lives here (omp/prompt.omp.json)
-rm -rf "$HOME/.config/zenwritten_dark"
-
-# Run nvim's own bootstrap if provided
-if [ -x "$HOME/.config/nvim/init.sh" ]; then
-  echo "running: ~/.config/nvim/init.sh"
-  "$HOME/.config/nvim/init.sh"
-fi
-
-# --- machine credentials: git-crypt repository ---
-CREDENTIALS="$HOME/credentials"
-clone_or_pull https://github.com/s3nn1k/credentials.git "$CREDENTIALS"
-
-# --- Obsidian: note vaults (shared config lives at ~/.config/obsidian, repo removed) ---
-for vault_name in personal work; do
-  VAULT="$HOME/vaults/$vault_name"
-  mkdir -p "$(dirname "$VAULT")"
-  clone_or_pull "https://github.com/s3nn1k/obsidian-$vault_name.git" "$VAULT"
-  [[ -L "$VAULT/.obsidian" || ! -e "$VAULT/.obsidian" ]] && ln -sfn "$HOME/.config/obsidian" "$VAULT/.obsidian" || echo "warn: $VAULT/.obsidian is a real directory, not replacing" >&2
-  register_vault "$VAULT"
+for step_file in "$(dirname "${BASH_SOURCE[0]}")"/../bootstrap/steps/*.sh; do
+    # shellcheck source=/dev/null
+    source "$step_file"
 done
 
-mkdir -p "$HOME/Library/Application Support/keepassxc"
-link keepassxc/keepassxc.ini "Library/Application Support/keepassxc/keepassxc.ini"
+main() {
+    local arg step_name full_run=false
+    local -a selected=() forwarded=()
+    if (( $# == 0 )); then
+        full_run=true
+        selected=("${STEP_ORDER[@]}")
+    elif [[ "$1" == "--list" && $# -eq 1 ]]; then
+        for step_name in "${STEP_ORDER[@]}"; do
+            printf '%s\n' "$step_name"
+        done
+        return 0
+    else
+        for arg in "$@"; do
+            if [[ " ${STEP_ORDER[*]} " == *" $arg "* ]]; then
+                if [[ ${#forwarded[@]} -gt 0 ]]; then
+                    echo "bootstrap: неизвестный шаг: $arg (см. --list)" >&2
+                    exit 2
+                fi
+                selected+=("$arg")
+            elif [[ ${#selected[@]} -eq 1 ]]; then
+                forwarded+=("$arg")
+            else
+                echo "bootstrap: неизвестный шаг: $arg (см. --list)" >&2
+                exit 2
+            fi
+        done
+    fi
 
-# --- финальная подсказка и ручные шаги (GUI, не автоматизируются) ---
-echo "manual steps:
+    for step_name in "${selected[@]}"; do
+        "run_$step_name" "${forwarded[@]}"
+    done
+    if [[ "$full_run" != true ]]; then
+        return 0
+    fi
+    printf '%s\n' \
+        "manual steps:
   1. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
   3. токены агента: ~/credentials/agents-credentials/ (git-credentials + kubeconfig/pgpass/pg_service.conf)
-  4. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)"
-echo "Если herdr/config.toml обновлялся: herdr server reload-config (сервер конфиг сам не перечитывает)."
+  4. mcp.json -> ~/.pi/agent/mcp.json (grafana-mcp; токен сервис-аккаунта из Grafana)" \
+        "Если herdr/config.toml обновлялся: herdr server reload-config (сервер конфиг сам не перечитывает)."
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi
