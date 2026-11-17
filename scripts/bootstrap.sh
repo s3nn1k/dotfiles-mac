@@ -185,9 +185,7 @@ fi
 CREDENTIALS="$HOME/credentials"
 clone_or_pull https://github.com/s3nn1k/credentials.git "$CREDENTIALS"
 
-# --- Obsidian: note vaults + shared config ---
-clone_or_pull https://github.com/s3nn1k/obsidian-config.git "$HOME/.config/obsidian"
-
+# --- Obsidian: note vaults (shared config lives at ~/.config/obsidian, repo removed) ---
 for vault_name in personal work; do
   VAULT="$HOME/vaults/$vault_name"
   mkdir -p "$(dirname "$VAULT")"
