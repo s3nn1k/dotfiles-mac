@@ -117,6 +117,9 @@ install_command "$DIR/bin/wt" wt
 install_command "$DIR/herdr/bin/herdr-ws.sh" herdr-ws
 install_command "$DIR/herdr/bin/herdr-agent-rename.sh" herdr-agent-rename
 rm -f "$LOCAL_BIN/herdr-ws-focus"
+rm -f "$LOCAL_BIN/git-crypt-repo" "$LOCAL_BIN/git-crypt-textconv" \
+  "$LOCAL_BIN/credentials-setup" "$LOCAL_BIN/git-cred-read"
+rm -rf "$HOME/.local/share/git-crypt"
 
 # --- file symlinks ---
 link gitconfig       .gitconfig
