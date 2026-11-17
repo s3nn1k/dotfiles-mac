@@ -37,9 +37,13 @@ main() {
             fi
         done
     fi
+    if [[ ${#forwarded[@]} -gt 0 ]]; then
+        echo "bootstrap: шаги не принимают аргументы: ${forwarded[*]}" >&2
+        exit 2
+    fi
 
     for step_name in "${selected[@]}"; do
-        "run_$step_name" ${forwarded[@]+"${forwarded[@]}"}
+        "run_$step_name"
     done
     if [[ "$full_run" != true ]]; then
         return 0
