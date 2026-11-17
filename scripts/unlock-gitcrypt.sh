@@ -39,7 +39,10 @@ main() {
         cd "$CREDENTIALS"
         make init
         make unlock
-    )
+    ) || {
+        rm -f "$CREDENTIALS/.git/git-crypt/keys/default"
+        fail 'unlock failed: key not installed, repo still locked - re-run with the correct key'
+    }
     verify_decrypted
 
     make -C "$CREDENTIALS" link
