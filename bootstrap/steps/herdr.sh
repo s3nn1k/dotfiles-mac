@@ -1,5 +1,12 @@
 # shellcheck shell=bash
 run_herdr() {
+    local bridge_source="$HOME/pi-sandbox-macos/launchagents/com.pi-sandbox-macos.herdr-bridge.plist"
+    local bridge_target="$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist"
+    [[ -f "$bridge_source" ]] || {
+        echo "bootstrap: нет $bridge_source — сначала запусти scripts/bootstrap.sh repos" >&2
+        return 1
+    }
+
     mkdir -p "$LOCAL_BIN"
     install_command "$REPOSITORY/herdr/bin/herdr-ws.sh" herdr-ws
     install_command "$REPOSITORY/herdr/bin/herdr-agent-rename.sh" herdr-agent-rename
@@ -16,8 +23,7 @@ run_herdr() {
     launchctl bootout "gui/$(id -u)/com.s3nn1k.herdr-bridge" >/dev/null 2>&1 || true
     launchctl bootout "gui/$(id -u)/com.pi-sandbox.herdr-bridge" >/dev/null 2>&1 || true
     launchctl bootout "gui/$(id -u)/com.pi-sandbox-macos.herdr-bridge" >/dev/null 2>&1 || true
-    sed "s|__HOME__|$HOME|" "$HOME/pi-sandbox-macos/launchagents/com.pi-sandbox-macos.herdr-bridge.plist" \
-      > "$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist"
-    launchctl bootstrap "gui/$(id -u)" \
-      "$HOME/Library/LaunchAgents/com.pi-sandbox-macos.herdr-bridge.plist" && echo "herdr-bridge: agent loaded"
+    sed "s|__HOME__|$HOME|" "$bridge_source" > "$bridge_target.tmp"
+    mv -f "$bridge_target.tmp" "$bridge_target"
+    launchctl bootstrap "gui/$(id -u)" "$bridge_target" && echo "herdr-bridge: agent loaded"
 }
