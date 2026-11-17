@@ -35,6 +35,8 @@ applies the Brewfile (apps included), and runs `gh auth login` if needed. It sto
 of secret activation: afterwards run `scripts/unlock-gitcrypt.sh` (prompts for the
 credentials key).
 
+Step-wise run: `~/dotfiles-mac/scripts/bootstrap.sh <step>`; step list - `--list`.
+
 ```bash
 # 1. Xcode Command Line Tools (git) - installer GUI, one click-through
 xcode-select --install
