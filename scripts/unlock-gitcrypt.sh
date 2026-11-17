@@ -26,6 +26,7 @@ treatment: cd $CREDENTIALS && make lock && make unlock (paste the new base64 key
 
 main() {
     [[ -d "$CREDENTIALS" ]] || fail "repository is missing: $CREDENTIALS"
+    chmod 700 "$CREDENTIALS"/scripts/*.sh 2>/dev/null || true
     [[ -x "$CREDENTIALS/scripts/git-crypt-repo.sh" ]] ||
         fail "нет $CREDENTIALS/scripts/git-crypt-repo.sh; обнови ~/credentials (git pull)"
 
@@ -44,7 +45,8 @@ main() {
     make -C "$CREDENTIALS" link
 
     find "$CREDENTIALS" -type d -exec chmod 700 {} +
-    find "$CREDENTIALS" -type f -exec chmod 600 {} +
+    find "$CREDENTIALS" -type f -not -path '*/scripts/*' -exec chmod 600 {} +
+    chmod 700 "$CREDENTIALS"/scripts/*.sh
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
