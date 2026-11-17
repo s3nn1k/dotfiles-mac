@@ -65,7 +65,8 @@ Can't be automated on macOS (require user clicks):
 Run bootstrap right after every pull: until it re-runs, renamed commands leave broken
 `~/.local/bin` symlinks and commits fail on the missing identity include. On a fresh
 `~/credentials` clone, run `scripts/unlock-gitcrypt.sh` before committing there: it
-installs the repo-local pre-commit guard that blocks committing still-encrypted files.
+installs the repo-local pre-commit guard that blocks committing still-encrypted files
+and unsets the legacy global `core.hooksPath` that would silence that guard.
 
 ```bash
 git pull

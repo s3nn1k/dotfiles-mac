@@ -33,6 +33,7 @@ main() {
     read -r -s -p "ключ credentials: " key
     echo
     export VAULT_KEY="$key"
+    git -C "$CREDENTIALS" config --unset core.hooksPath 2>/dev/null || true
     (
         cd "$CREDENTIALS"
         make init
