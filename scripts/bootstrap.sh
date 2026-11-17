@@ -114,8 +114,8 @@ bash "$HOME/pi-sandbox-macos/install.sh"
 # --- commands from bin/ (before repos below: their make targets use them) ---
 mkdir -p "$LOCAL_BIN"
 install_command "$DIR/bin/wt" wt
-install_command "$DIR/bin/herdr-ws.sh" herdr-ws
-install_command "$DIR/bin/herdr-agent-rename" herdr-agent-rename
+install_command "$DIR/herdr/bin/herdr-ws.sh" herdr-ws
+install_command "$DIR/herdr/bin/herdr-agent-rename.sh" herdr-agent-rename
 rm -f "$LOCAL_BIN/herdr-ws-focus"
 
 # --- file symlinks ---

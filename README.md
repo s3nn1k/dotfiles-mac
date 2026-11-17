@@ -10,8 +10,13 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   private hosts and identities live in the included
   `~/.config/git/credentials.gitconfig` (linked by `scripts/unlock-gitcrypt.sh`)
 - `aerospace.toml` - AeroSpace window manager
-- `herdr/config.toml` - Herdr terminal workspace manager (bootstrap links it to
-  `~/.config/herdr/config.toml`; apply via `herdr server reload-config`)
+- `herdr/` - Herdr terminal workspace manager: `config.toml` (bootstrap links it to
+  `~/.config/herdr/config.toml`; apply via `herdr server reload-config`) and `bin/`
+  commands installed to `~/.local/bin`:
+  - `herdr-ws.sh` - herdr workspace commands by sidebar position
+    (`focus`/`move-ws`/`move-tab`/`new-tab`)
+  - `herdr-agent-rename.sh` - herdr popup: rename the agent of the current pane
+    (bound to `prefix+m`)
 - `omp/prompt.omp.json` - oh-my-posh prompt theme (linked to `~/.config/omp/`)
 - `iterm2.json` - iTerm2 dynamic profile (auto-reloads on save; bootstrap also sets it as
   the default profile)
@@ -19,10 +24,6 @@ Personal machine config, symlinked into `$HOME` by `scripts/bootstrap.sh`.
   `brew bundle dump --file Brewfile --force`
 - `bin/` - commands installed to `~/.local/bin` by bootstrap:
   - `wt` - transcribes audio/video via whisper.cpp -> text to stdout
-  - `herdr-ws.sh` - herdr workspace commands by sidebar position
-    (`focus`/`move-ws`/`move-tab`/`new-tab`)
-  - `herdr-agent-rename` - herdr popup: rename the agent of the current pane
-    (bound to `prefix+m`)
 - `scripts/`:
   - `bootstrap.sh` - full machine setup (below)
   - `unlock-gitcrypt.sh` - unlocks git-crypt in `~/credentials` (machinery lives in
