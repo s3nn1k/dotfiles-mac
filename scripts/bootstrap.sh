@@ -39,7 +39,7 @@ main() {
     fi
 
     for step_name in "${selected[@]}"; do
-        "run_$step_name" "${forwarded[@]}"
+        "run_$step_name" ${forwarded[@]+"${forwarded[@]}"}
     done
     if [[ "$full_run" != true ]]; then
         return 0
