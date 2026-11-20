@@ -8,6 +8,15 @@ link() {
   echo "linked:  $dst -> $src"
 }
 
+seed_file() {
+  local src="$REPOSITORY/$1" dst="$HOME/$2"
+  if [ ! -e "$dst" ]; then
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+    echo "seeded:  $dst"
+  fi
+}
+
 install_command() {
   local src="$1" name="$2"
   ln -sfn "$src" "$LOCAL_BIN/$name"
