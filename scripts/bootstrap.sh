@@ -49,6 +49,7 @@ main() {
         return 0
     fi
     printf '%s\n' \
+        "Секреты: scripts/unlock-gitcrypt.sh (ключ credentials) - раскладка секретов и права применяются сами." \
         "manual steps:
   1. Happ: логин (TUN-режим и обход локальных сетей — см. ~/credentials/README.md)
   2. AirPlay-ресивер OFF: System Settings -> General -> AirDrop & Handoff (порты 5000/7000)
