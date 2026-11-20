@@ -13,4 +13,6 @@ run_repos() {
     clone_or_pull https://github.com/s3nn1k/pi-sandbox-macos.git "$HOME/pi-sandbox-macos"
 
     bash "$HOME/pi-sandbox-macos/install.sh"
+
+    clone_or_pull https://github.com/s3nn1k/share.git "$HOME/vaults/share"
 }
